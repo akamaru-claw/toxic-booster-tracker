@@ -1,0 +1,23 @@
+# .gitignore
+
+# Database (sensitive, server-only)
+*.db
+*.db-wal
+*.db-shm
+
+# Environment / credentials
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
+
+# Deploy script credentials
+deploy.shdata/
+deploy.sh
