@@ -71,8 +71,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 @media(min-width:420px){.gr{grid-template-columns:repeat(4,1fr);gap:10px}}
 @media(min-width:640px){.gr{grid-template-columns:repeat(5,1fr)}}
 @media(min-width:900px){.gr{grid-template-columns:repeat(7,1fr)}}
-.c{background:var(--s1);border:2px solid var(--bd);border-radius:12px;padding:6px 4px;text-align:center;cursor:pointer;user-select:none;transition:all .12s;position:relative;overflow:hidden}
+.c{background:var(--s1);border:2px solid var(--bd);border-radius:12px;padding:6px 4px;text-align:center;cursor:pointer;user-select:none;transition:all .12s;position:relative;overflow:hidden;-webkit-touch-callout:none;-webkit-user-select:none}
 .c:active{transform:scale(.94)}
+.c .c-flash{position:absolute;inset:0;border-radius:10px;pointer-events:none;opacity:0;transition:opacity .3s}
+.c .c-flash.up{background:rgba(78,204,163,.2)}.c .c-flash.dn{background:rgba(231,76,60,.2)}
+.c .c-flash.show{opacity:1;transition:opacity 0s}
+.c .c-hold-hint{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--rd);opacity:0;transition:opacity .2s;white-space:nowrap;pointer-events:none}
+.c .c-hold-hint.show{opacity:1}
 .c .cn{font-size:22px;font-weight:900;line-height:1;color:var(--mt2)}
 .c .cc{font-size:18px;font-weight:800;margin:2px 0}
 .c .ci{font-size:9px;color:var(--mt);min-height:14px}
@@ -212,7 +217,9 @@ function saveC(){clearTimeout(sv);sv=setTimeout(async()=>{await api(Ca,{action:'
 function render(){
   const g=document.getElementById('grid');g.innerHTML='';let o=0,d=0,m=0,t=0;
   for(let i=0;i<N;i++){const n=i+1,v=cards[i],pct=v/MX*100;let cls=v===0?'s0':v===1?'s1':v>=MX?'sm':'sd';if(v===0)m++;else{o++;if(v>1)d+=v-1;t+=v}
-  const el=document.createElement('div');el.className='c '+cls;el.onclick=()=>openM(i);el.innerHTML=`<div class="cn">#${n}</div><div class="cc">${v||'—'}</div><div class="ci">${v>1?(v-1)+'× doppelt':v===1?'✓':'fehlt'}</div><div class="cb"><div class="cf" style="width:${Math.min(pct,100)}%"></div></div>`;g.appendChild(el)}
+  const el=document.createElement('div');el.className='c '+cls;
+  el.innerHTML=`<div class="c-flash" id="fl${i}"></div><div class="cn">#${n}</div><div class="cc">${v||'—'}</div><div class="ci">${v>1?(v-1)+'× doppelt':v===1?'✓':'fehlte'}</div><div class="cb"><div class="cf" style="width:${Math.min(pct,100)}%"></div></div><div class="c-hold-hint" id="hh${i}">−1</div>`;
+  setupCardTouch(el,i);g.appendChild(el)}
   document.getElementById('sO').textContent=o;document.getElementById('sD').textContent=d;document.getElementById('sM').textContent=m;document.getElementById('sT').textContent=t;
   document.getElementById('tnO').textContent=o+'/21';document.getElementById('tnT2').textContent=d;document.getElementById('tnN').textContent=m;
 
@@ -344,6 +351,49 @@ async function loadInbox(){
 function statusLabel(s){return{proposed:'⏳ Offen',completed:'✅ Erledigt',rejected:'❌ Abgelehnt',cancelled:'🔙 Zurückgezogen',failed:'💥 Fehlgeschlagen'}[s]||s}
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 function getDbUid(){/* We don't store uid, derive from verify if needed */return -1}
+
+function vib(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
+let pressTimers={};
+function setupCardTouch(el,i){
+  let timer=null,startY=0,moved=false;
+  const start=(e)=>{
+    moved=false;
+    if(e.touches){startY=e.touches[0].clientY}
+    timer=setTimeout(()=>{
+      // Long press = -1
+      if(cards[i]>0){
+        cards[i]=Math.max(0,cards[i]-1);saveC();flash(i,'dn');vib(30);render()
+      }
+      timer='held'
+    },500);
+  };
+  const move=(e)=>{if(e.touches&&Math.abs(e.touches[0].clientY-startY)>10){moved=true;cancel()}};
+  const cancel=()=>{if(timer&&timer!=='held'){clearTimeout(timer)}timer=null};
+  const end=()=>{
+    if(timer==='held'){timer=null;return} // already handled by long press
+    if(moved){cancel();return}
+    if(timer){clearTimeout(timer);timer=null}
+    // Short tap = +1
+    if(cards[i]<MX){
+      cards[i]=Math.min(MX,cards[i]+1);saveC();flash(i,'up');vib(10);render()
+    }
+  };
+  el.addEventListener('touchstart',start,{passive:true});
+  el.addEventListener('touchmove',move,{passive:true});
+  el.addEventListener('touchend',end);
+  el.addEventListener('touchcancel',cancel);
+  el.addEventListener('mousedown',start);
+  el.addEventListener('mousemove',move);
+  el.addEventListener('mouseup',end);
+  el.addEventListener('mouseleave',cancel);
+  // Context menu (right click / long press on desktop) → open modal
+  el.addEventListener('contextmenu',(e)=>{e.preventDefault();openM(i)});
+}
+function flash(i,dir){
+  const fl=document.getElementById('fl'+i);if(!fl)return;
+  fl.className='c-flash '+dir+' show';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{fl.classList.remove('show')}));
+}
 
 async function respondTrade(id,resp){
   const r=await api(Tr,{action:'respond',token:tk,trade_id:id,response:resp});
