@@ -352,42 +352,43 @@ function statusLabel(s){return{proposed:'⏳ Offen',completed:'✅ Erledigt',rej
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 function getDbUid(){/* We don't store uid, derive from verify if needed */return -1}
 
-function vib(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
-let pressTimers={};
+function vib(ms){try{if(navigator.vibrate)navigator.vibrate(ms)}catch(e){}}
 function setupCardTouch(el,i){
-  let timer=null,startY=0,moved=false;
+  let timer=null,startY=0,moved=false,isTouch=false,longFired=false;
+  const HOLD=400;
   const start=(e)=>{
-    moved=false;
-    if(e.touches){startY=e.touches[0].clientY}
+    moved=false;longFired=false;isTouch=!!e.touches;
+    if(e.touches)startY=e.touches[0].clientY;
     timer=setTimeout(()=>{
-      // Long press = -1
-      if(cards[i]>0){
-        cards[i]=Math.max(0,cards[i]-1);saveC();flash(i,'dn');vib(30);render()
-      }
-      timer='held'
-    },500);
+      longFired=true;
+      if(cards[i]>0){cards[i]=Math.max(0,cards[i]-1);saveC();flash(i,'dn');vib(30);render()}
+    },HOLD);
   };
-  const move=(e)=>{if(e.touches&&Math.abs(e.touches[0].clientY-startY)>10){moved=true;cancel()}};
-  const cancel=()=>{if(timer&&timer!=='held'){clearTimeout(timer)}timer=null};
-  const end=()=>{
-    if(timer==='held'){timer=null;return} // already handled by long press
-    if(moved){cancel();return}
+  const move=(e)=>{if(e.touches&&Math.abs(e.touches[0].clientY-startY)>8){moved=true;if(timer){clearTimeout(timer);timer=null}}};
+  const cancel=()=>{if(timer){clearTimeout(timer);timer=null}};
+  const end=(e)=>{
+    // Prevent synthetic mouse events after touch
+    if(isTouch&&e.type==='mouseup'){e.preventDefault();cancel();return}
     if(timer){clearTimeout(timer);timer=null}
+    if(longFired||moved)return;
     // Short tap = +1
-    if(cards[i]<MX){
-      cards[i]=Math.min(MX,cards[i]+1);saveC();flash(i,'up');vib(10);render()
-    }
+    if(cards[i]<MX){cards[i]=Math.min(MX,cards[i]+1);saveC();flash(i,'up');vib(10);render()}
   };
   el.addEventListener('touchstart',start,{passive:true});
   el.addEventListener('touchmove',move,{passive:true});
   el.addEventListener('touchend',end);
   el.addEventListener('touchcancel',cancel);
-  el.addEventListener('mousedown',start);
-  el.addEventListener('mousemove',move);
-  el.addEventListener('mouseup',end);
+  // Desktop: separate mouse handling (no conflict with touch)
+  el.addEventListener('mousedown',(e)=>{if(!isTouch)start(e)});
+  el.addEventListener('mouseup',(e)=>{if(!isTouch)end(e)});
   el.addEventListener('mouseleave',cancel);
-  // Context menu (right click / long press on desktop) → open modal
-  el.addEventListener('contextmenu',(e)=>{e.preventDefault();openM(i)});
+  // Double-tap / double-click → open modal
+  let lastTap=0;
+  el.addEventListener('touchend',(e)=>{
+    const now=Date.now();if(now-lastTap<350){openM(i);e.preventDefault()}lastTap=now;
+  });
+  el.addEventListener('dblclick',(e)=>{openM(i);e.preventDefault()});
+  el.addEventListener('contextmenu',(e)=>{e.preventDefault()});
 }
 function flash(i,dir){
   const fl=document.getElementById('fl'+i);if(!fl)return;
