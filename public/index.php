@@ -354,40 +354,31 @@ function getDbUid(){/* We don't store uid, derive from verify if needed */return
 
 function vib(ms){try{if(navigator.vibrate)navigator.vibrate(ms)}catch(e){}}
 function setupCardTouch(el,i){
-  let timer=null,startY=0,moved=false,isTouch=false,longFired=false;
+  let timer=null,startY=0,moved=false,longFired=false,lastTap=0;
   const HOLD=400;
-  const start=(e)=>{
-    moved=false;longFired=false;isTouch=!!e.touches;
-    if(e.touches)startY=e.touches[0].clientY;
-    timer=setTimeout(()=>{
-      longFired=true;
-      if(cards[i]>0){cards[i]=Math.max(0,cards[i]-1);saveC();flash(i,'dn');vib(30);render()}
-    },HOLD);
-  };
-  const move=(e)=>{if(e.touches&&Math.abs(e.touches[0].clientY-startY)>8){moved=true;if(timer){clearTimeout(timer);timer=null}}};
-  const cancel=()=>{if(timer){clearTimeout(timer);timer=null}};
-  const end=(e)=>{
-    // Prevent synthetic mouse events after touch
-    if(isTouch&&e.type==='mouseup'){e.preventDefault();cancel();return}
+  // Touch: tap=+1, hold=-1, double-tap=modal
+  el.addEventListener('touchstart',(e)=>{
+    moved=false;longFired=false;
+    startY=e.touches[0].clientY;
+    timer=setTimeout(()=>{longFired=true;if(cards[i]>0){cards[i]=Math.max(0,cards[i]-1);saveC();flash(i,'dn');vib(30);render()}},HOLD);
+  },{passive:true});
+  el.addEventListener('touchmove',(e)=>{if(Math.abs(e.touches[0].clientY-startY)>8){moved=true;if(timer){clearTimeout(timer);timer=null}}},{passive:true});
+  el.addEventListener('touchend',(e)=>{
+    e.preventDefault(); // kills synthetic click/mouseup
     if(timer){clearTimeout(timer);timer=null}
     if(longFired||moved)return;
-    // Short tap = +1
+    const now=Date.now();
+    if(now-lastTap<350){openM(i);lastTap=0;return}
+    lastTap=now;
     if(cards[i]<MX){cards[i]=Math.min(MX,cards[i]+1);saveC();flash(i,'up');vib(10);render()}
-  };
-  el.addEventListener('touchstart',start,{passive:true});
-  el.addEventListener('touchmove',move,{passive:true});
-  el.addEventListener('touchend',end);
-  el.addEventListener('touchcancel',cancel);
-  // Desktop: separate mouse handling (no conflict with touch)
-  el.addEventListener('mousedown',(e)=>{if(!isTouch)start(e)});
-  el.addEventListener('mouseup',(e)=>{if(!isTouch)end(e)});
-  el.addEventListener('mouseleave',cancel);
-  // Double-tap / double-click → open modal
-  let lastTap=0;
-  el.addEventListener('touchend',(e)=>{
-    const now=Date.now();if(now-lastTap<350){openM(i);e.preventDefault()}lastTap=now;
   });
-  el.addEventListener('dblclick',(e)=>{openM(i);e.preventDefault()});
+  el.addEventListener('touchcancel',()=>{if(timer){clearTimeout(timer);timer=null}});
+  // Desktop: click=+1, dblclick=modal, contextmenu=nothing
+  el.addEventListener('click',(e)=>{
+    if(e.sourceCapabilities&&e.sourceCapabilities.firesTouchEvents)return; // Chrome
+    if(cards[i]<MX){cards[i]=Math.min(MX,cards[i]+1);saveC();flash(i,'up');render()}
+  });
+  el.addEventListener('dblclick',()=>{openM(i)});
   el.addEventListener('contextmenu',(e)=>{e.preventDefault()});
 }
 function flash(i,dir){
