@@ -71,14 +71,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 @media(min-width:420px){.gr{grid-template-columns:repeat(4,1fr);gap:10px}}
 @media(min-width:640px){.gr{grid-template-columns:repeat(5,1fr)}}
 @media(min-width:900px){.gr{grid-template-columns:repeat(7,1fr)}}
-.c{background:var(--s1);border:2px solid var(--bd);border-radius:12px;padding:6px 4px;text-align:center;cursor:pointer;user-select:none;transition:all .12s;position:relative;overflow:hidden;-webkit-touch-callout:none;-webkit-user-select:none}
+.c{background:var(--s1);border:2px solid var(--bd);border-radius:12px;padding:6px 4px 4px;text-align:center;cursor:pointer;user-select:none;transition:all .12s;position:relative;overflow:hidden;-webkit-touch-callout:none;-webkit-user-select:none}
 .c:active{transform:scale(.94)}
 .c .c-flash{position:absolute;inset:0;border-radius:10px;pointer-events:none;opacity:0;transition:opacity .3s}
 .c .c-flash.up{background:rgba(78,204,163,.2)}.c .c-flash.dn{background:rgba(231,76,60,.2)}
 .c .c-flash.show{opacity:1;transition:opacity 0s}
 .c .c-hold-hint{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--rd);opacity:0;transition:opacity .2s;white-space:nowrap;pointer-events:none}
 .c .c-hold-hint.show{opacity:1}
-.c .cn{font-size:22px;font-weight:900;line-height:1;color:var(--mt2)}
+.c .cn{font-size:14px;font-weight:900;line-height:1;color:var(--mt2)}
+.c .c-emoji{font-size:28px;line-height:1;margin-bottom:2px}
+.c .c-name{font-size:10px;font-weight:700;color:var(--tx);margin:1px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .c .cc{font-size:18px;font-weight:800;margin:2px 0}
 .c .ci{font-size:9px;color:var(--mt);min-height:14px}
 .c .cb{height:3px;background:var(--bd);border-radius:2px;margin-top:4px;overflow:hidden}
@@ -194,13 +196,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 </div>
 
 <!-- Card Edit Modal -->
-<div class="mo" id="cMod"><div class="md"><h2>Karte <span class="t" id="mN">#1</span></h2><div class="md-sub" id="mS">Max: 210 · Toxic Booster Genesis</div><div class="md-big" id="mC">0</div><div class="mr"><button class="mb" onclick="aj(-10)">−10</button><button class="mb" onclick="aj(-1)">−1</button><button class="mb" onclick="aj(1)">+1</button><button class="mb" onclick="aj(10)">+10</button></div><div class="mp2"><button onclick="sC(0)">0</button><button onclick="sC(1)">1</button><button onclick="sC(5)">5</button><button onclick="sC(210)">MAX</button></div><button class="mc2" onclick="clM()">Schließen</button></div></div>
+<div class="mo" id="cMod"><div class="md"><h2><span class="t" id="mN">#1 Satoshi</span></h2><div class="md-sub" id="mS">Bitcoin-Schöpfer · Max: 210 · Toxic Booster Genesis</div><div class="md-big" id="mC">0</div><div class="mr"><button class="mb" onclick="aj(-10)">−10</button><button class="mb" onclick="aj(-1)">−1</button><button class="mb" onclick="aj(1)">+1</button><button class="mb" onclick="aj(10)">+10</button></div><div class="mp2"><button onclick="sC(0)">0</button><button onclick="sC(1)">1</button><button onclick="sC(5)">5</button><button onclick="sC(210)">MAX</button></div><button class="mc2" onclick="clM()">Schließen</button></div></div>
 
 <!-- Trade Propose Modal -->
 <div class="mo" id="tMod"><div class="md"><h2>🧪 <span class="t">Tausch</span> vorschlagen</h2><div class="md-sub" id="tSub"></div><div class="tp-fields"><div class="tp-row"><label>Ich biete</label><select id="tpOffer" onchange="updTP()"></select></div><div class="tp-row"><label style="width:40px">×</label><input type="number" id="tpOfferN" value="1" min="1" max="210" onchange="updTP()"></div><div class="tp-row"><label>Ich will</label><select id="tpWant" onchange="updTP()"></select></div><div class="tp-row"><label style="width:40px">×</label><input type="number" id="tpWantN" value="1" min="1" max="210" onchange="updTP()"></div></div><div class="tp-preview" id="tpPrev"></div><div class="ae" id="tpErr"></div><div class="mr"><button class="btn bp" style="flex:1" onclick="sendTrade()">Vorschlagen</button></div><button class="mc2" onclick="clTM()">Abbrechen</button></div></div>
 
 <script>
 const Au='auth_api.php',Ca='cards_api.php',Tr='trade_api.php',N=21,MX=210;
+const CARDS=[
+{n:1,name:'Satoshi',desc:'Bitcoin-Schöpfer',emoji:'₿'},
+{n:2,name:'HODL',desc:'Halten',emoji:'🤲'},
+{n:3,name:'Pleb',desc:'Normie',emoji:'🧑'},
+{n:4,name:'DIP',desc:'Crash',emoji:'📉'},
+{n:5,name:'Bear',desc:'Bärenmarkt',emoji:'🐻'},
+{n:6,name:'Bull',desc:'Bullenmarkt',emoji:'🐂'},
+{n:7,name:'Bag',desc:'Bagholder',emoji:'👜'},
+{n:8,name:'Rekt',desc:'Liquidiert',emoji:'💀'},
+{n:9,name:'Sats',desc:'Satoshis',emoji:'⚡'},
+{n:10,name:'Node',desc:'Full Node',emoji:'🖥️'},
+{n:11,name:'Fork',desc:'Hard Fork',emoji:'🔀'},
+{n:12,name:'Hash',desc:'Hashrate',emoji:'⛏️'},
+{n:13,name:'Block',desc:'Blockchain',emoji:'🧱'},
+{n:14,name:'Fiat',desc:'Papierdollar',emoji:'💵'},
+{n:15,name:'Seed',desc:'Seed Phrase',emoji:'🌱'},
+{n:16,name:'Pump',desc:'Pumpe',emoji:'🚀'},
+{n:17,name:'Dump',desc:'Dump',emoji:'⬇️'},
+{n:18,name:'Whale',desc:'Wal',emoji:'🐋'},
+{n:19,name:'FOMO',desc:'Angst zu verpassen',emoji:'😱'},
+{n:20,name:'NGU',desc:'Number Go Up',emoji:'📈'},
+{n:21,name:'Toxic',desc:'Toxic Booster',emoji:'🧪'}
+];
 let tk=localStorage.getItem('tb_tk')||'',un=localStorage.getItem('tb_un')||'';
 let cards=Array(N).fill(0),ac=null,sv=null,tradeTarget=null,tradeTargetName='';
 let marketData=null,inboxData=null;
@@ -217,18 +242,18 @@ function saveC(){clearTimeout(sv);sv=setTimeout(async()=>{await api(Ca,{action:'
 function render(){
   const g=document.getElementById('grid');g.innerHTML='';let o=0,d=0,m=0,t=0;
   for(let i=0;i<N;i++){const n=i+1,v=cards[i],pct=v/MX*100;let cls=v===0?'s0':v===1?'s1':v>=MX?'sm':'sd';if(v===0)m++;else{o++;if(v>1)d+=v-1;t+=v}
-  const el=document.createElement('div');el.className='c '+cls;
-  el.innerHTML=`<div class="c-flash" id="fl${i}"></div><div class="cn">#${n}</div><div class="cc">${v||'—'}</div><div class="ci">${v>1?(v-1)+'× doppelt':v===1?'✓':'fehlte'}</div><div class="cb"><div class="cf" style="width:${Math.min(pct,100)}%"></div></div><div class="c-hold-hint" id="hh${i}">−1</div>`;
+  const cd=CARDS[i],el=document.createElement('div');el.className='c '+cls;
+  el.innerHTML=`<div class="c-flash" id="fl${i}"></div><div class="c-emoji">${cd.emoji}</div><div class="cn">#${n}</div><div class="c-name">${cd.name}</div><div class="cc">${v||'—'}</div><div class="ci">${v>1?(v-1)+'× doppelt':v===1?'✓':'fehlte'}</div><div class="cb"><div class="cf" style="width:${Math.min(pct,100)}%"></div></div><div class="c-hold-hint" id="hh${i}">−1</div>`;
   setupCardTouch(el,i);g.appendChild(el)}
   document.getElementById('sO').textContent=o;document.getElementById('sD').textContent=d;document.getElementById('sM').textContent=m;document.getElementById('sT').textContent=t;
   document.getElementById('tnO').textContent=o+'/21';document.getElementById('tnT2').textContent=d;document.getElementById('tnN').textContent=m;
 
   const tc=document.getElementById('trC');tc.innerHTML='';let ht=false;
-  for(let i=0;i<N;i++){if(cards[i]>1){ht=true;const ch=document.createElement('div');ch.className='ch dy';ch.innerHTML=`#${i+1} <span class="bd">${cards[i]-1}×</span>`;ch.onclick=()=>openM(i);tc.appendChild(ch)}
+  for(let i=0;i<N;i++){if(cards[i]>1){ht=true;const cd=CARDS[i];const ch=document.createElement('div');ch.className='ch dy';ch.innerHTML=`${cd.emoji} #${i+1} ${cd.name} <span class="bd">${cards[i]-1}×</span>`;ch.onclick=()=>openM(i);tc.appendChild(ch)}
 }if(!ht)tc.innerHTML='<div class="em">Noch keine doppelten Karten 🤷</div>';
 
   const nc=document.getElementById('neC');nc.innerHTML='';let hm=false;
-  for(let i=0;i<N;i++){if(cards[i]===0){hm=true;const ch=document.createElement('div');ch.className='ch mi';ch.innerHTML=`#${i+1}`;ch.onclick=()=>openM(i);nc.appendChild(ch)}
+  for(let i=0;i<N;i++){if(cards[i]===0){hm=true;const cd=CARDS[i];const ch=document.createElement('div');ch.className='ch mi';ch.innerHTML=`${cd.emoji} #${i+1} ${cd.name}`;ch.onclick=()=>openM(i);nc.appendChild(ch)}
 }if(!hm)nc.innerHTML='<div class="em">Vollständig! 🧪🎉</div>';
 
   loadInbox();
@@ -253,14 +278,14 @@ async function loadMarket(){
       
       if(isMe){
         html+=`<div class="match-card" onclick="openTradeTo(${otherUid},'${esc(otherName)}')"><div class="mc-users"><div class="mc-user">${esc(m.user_a)}</div><div class="mc-arrow">⟷</div><div class="mc-user">${esc(m.user_b)}</div></div><div class="mc-cards">`;
-        m.a_gives.forEach(c=>html+=`<div class="mc-row">${esc(m.user_a)} gibt <span class="bd">#${c}</span> → ${esc(m.user_b)}</div>`);
-        m.b_gives.forEach(c=>html+=`<div class="mc-row">${esc(m.user_b)} gibt <span class="bd">#${c}</span> → ${esc(m.user_a)}</div>`);
+        m.a_gives.forEach(c=>{const cd=CARDS[c-1]||{emoji:'?',name:'#'+c};html+=`<div class="mc-row">${esc(m.user_a)} gibt <span class="bd">${cd.emoji} #${c} ${cd.name}</span> → ${esc(m.user_b)}</div>`});
+        m.b_gives.forEach(c=>{const cd=CARDS[c-1]||{emoji:'?',name:'#'+c};html+=`<div class="mc-row">${esc(m.user_b)} gibt <span class="bd">${cd.emoji} #${c} ${cd.name}</span> → ${esc(m.user_a)}</div>`});
         html+=`<div class="mc-row" style="color:var(--t);margin-top:4px">👆 Tippen um Tausch vorzuschlagen</div>`;
         html+=`</div></div>`;
       } else {
         html+=`<div class="match-card" onclick="openTradeTo(${otherUid},'${esc(otherName)}')"><div class="mc-users"><div class="mc-user">${esc(m.user_a)}</div><div class="mc-arrow">⟷</div><div class="mc-user">${esc(m.user_b)}</div></div><div class="mc-cards">`;
-        m.a_gives.forEach(c=>html+=`<div class="mc-row">${esc(m.user_a)} hat <span class="bd">#${c}</span> doppelt</div>`);
-        m.b_gives.forEach(c=>html+=`<div class="mc-row">${esc(m.user_b)} hat <span class="bd">#${c}</span> doppelt</div>`);
+        m.a_gives.forEach(c=>{const cd=CARDS[c-1]||{emoji:'?',name:'#'+c};html+=`<div class="mc-row">${esc(m.user_a)} hat <span class="bd">${cd.emoji} #${c} ${cd.name}</span> doppelt</div>`});
+        m.b_gives.forEach(c=>{const cd=CARDS[c-1]||{emoji:'?',name:'#'+c};html+=`<div class="mc-row">${esc(m.user_b)} hat <span class="bd">${cd.emoji} #${c} ${cd.name}</span> doppelt</div>`});
         html+=`</div></div>`;
       }
     });
@@ -271,7 +296,8 @@ async function loadMarket(){
   if(r.offers&&r.offers.length>0){
     html+='<div class="mp"><h3>📤 Angebote (doppelte Karten)</h3>';
     r.offers.forEach(o=>{
-      html+=`<div class="offer-card"><div class="oc-header"><span class="oc-card">#${o.card}</span><span class="oc-count">${o.users.length} Anbieter</span></div>`;
+      const cd=CARDS[o.card-1]||{emoji:'?',name:'#'+o.card};
+      html+=`<div class="offer-card"><div class="oc-header"><span class="oc-card">${cd.emoji} #${o.card} ${cd.name}</span><span class="oc-count">${o.users.length} Anbieter</span></div>`;
       o.users.forEach(u=>{
         if(u.uid!==getDbUid()){
           html+=`<div style="font-size:12px;margin:4px 0;display:flex;justify-content:space-between;align-items:center"><span>${esc(u.username)} — <span style="color:var(--yl)">${u.available}×</span></span><button class="btn bg" style="padding:4px 10px;font-size:10px" onclick="openTradeTo(${u.uid},'${esc(u.username)}')">${u.available>1?'Tauschen':'Anfragen'}</button></div>`;
@@ -286,11 +312,13 @@ async function loadMarket(){
   if(r.needs&&r.needs.length>0){
     html+='<div class="mp"><h3>📥 Gesuche (fehlende Karten)</h3>';
     r.needs.forEach(n=>{
-      html+=`<div class="offer-card"><div class="oc-header"><span class="oc-card">#${n.card}</span><span class="oc-count" style="color:var(--rd)">${n.users.length} Suchende</span></div>`;
+      const cd=CARDS[n.card-1]||{emoji:'?',name:'#'+n.card};
+      html+=`<div class="offer-card"><div class="oc-header"><span class="oc-card">${cd.emoji} #${n.card} ${cd.name}</span><span class="oc-count" style="color:var(--rd)">${n.users.length} Suchende</span></div>`;
       n.users.forEach(u=>{
         if(u.uid!==getDbUid()){
           html+=`<div style="font-size:12px;margin:4px 0;display:flex;justify-content:space-between;align-items:center"><span>${esc(u.username)}</span>`;
           // Can I help? Check if I have dups of this card
+          const wantCd=CARDS[n.card-1]||{emoji:'?',name:'#'+n.card};
           if(cards[n.card-1]>1){
             html+=`<button class="btn bp" style="padding:4px 10px;font-size:10px" onclick="openTradeTo(${u.uid},'${esc(u.username)}',${n.card})">🎁 Bieten</button>`;
           }
@@ -321,7 +349,13 @@ async function loadInbox(){
     html+='<div class="sc"><h3>📥 Erhaltene Vorschläge</h3>';
     r.trades.received.forEach(t=>{
       const cls=t.status==='proposed'?'tr-recv':t.status==='completed'?'tr-done':t.status==='rejected'?'tr-rej':'tr-recv';
-      html+=`<div class="tr-card ${cls}"><div class="tr-top"><div class="tr-who">von <span>${esc(t.proposer)}</span></div><div class="tr-status ${t.status}">${statusLabel(t.status)}</div></div><div class="tr-detail"><span class="yl">${esc(t.proposer)} gibt #${t.offer_card}${t.offer_count>1?' ×'+t.offer_count:''}</span><br>⟷<br><span class="rd">Du gibst #${t.want_card}${t.want_count>1?' ×'+t.want_count:''}</span></div>`;
+      html+=`<div class="tr-card ${cls}"><div class="tr-top"><div class="tr-who">von <span>${esc(t.proposer)}</span></div><div class="tr-status ${t.status}">${statusLabel(t.status)}</div></div><div class="tr-detail"><span class="yl">${esc(t.proposer)} gibt ${(()=>{
+        const cd=CARDS[t.offer_card-1]||{emoji:'?',name:'#'+t.offer_card};
+        return cd.emoji+' '+cd.name;
+      })()} #${t.offer_card}${t.offer_count>1?' ×'+t.offer_count:''}</span><br>⟷<br><span class="rd">Du gibst ${(()=>{
+        const cd=CARDS[t.want_card-1]||{emoji:'?',name:'#'+t.want_card};
+        return cd.emoji+' '+cd.name;
+      })()} #${t.want_card}${t.want_count>1?' ×'+t.want_count:''}</span></div>`;
       if(t.status==='proposed'){
         html+=`<div class="tr-action"><button class="btn bp" style="flex:1" onclick="respondTrade(${t.id},'accepted')">✅ Annehmen</button><button class="btn bg" style="flex:1" onclick="respondTrade(${t.id},'rejected')">❌ Ablehnen</button></div>`;
       }
@@ -335,7 +369,13 @@ async function loadInbox(){
     html+='<div class="sc"><h3>📤 Gesendete Vorschläge</h3>';
     r.trades.sent.forEach(t=>{
       const cls=t.status==='proposed'?'tr-sent':t.status==='completed'?'tr-done':t.status==='rejected'?'tr-rej':'tr-sent';
-      html+=`<div class="tr-card ${cls}"><div class="tr-top"><div class="tr-who">an <span>${esc(t.receiver)}</span></div><div class="tr-status ${t.status}">${statusLabel(t.status)}</div></div><div class="tr-detail"><span class="yl">Du gibst #${t.offer_card}${t.offer_count>1?' ×'+t.offer_count:''}</span><br>⟷<br><span class="rd">Du willst #${t.want_card}${t.want_count>1?' ×'+t.want_count:''}</span></div>`;
+      html+=`<div class="tr-card ${cls}"><div class="tr-top"><div class="tr-who">an <span>${esc(t.receiver)}</span></div><div class="tr-status ${t.status}">${statusLabel(t.status)}</div></div><div class="tr-detail"><span class="yl">Du gibst ${(()=>{
+        const cd=CARDS[t.offer_card-1]||{emoji:'?',name:'#'+t.offer_card};
+        return cd.emoji+' '+cd.name;
+      })()} #${t.offer_card}${t.offer_count>1?' ×'+t.offer_count:''}</span><br>⟷<br><span class="rd">Du willst ${(()=>{
+        const cd=CARDS[t.want_card-1]||{emoji:'?',name:'#'+t.want_card};
+        return cd.emoji+' '+cd.name;
+      })()} #${t.want_card}${t.want_count>1?' ×'+t.want_count:''}</span></div>`;
       if(t.status==='proposed'){
         html+=`<div class="tr-action"><button class="btn bg" style="flex:1" onclick="cancelTrade(${t.id})">Zurückziehen</button></div>`;
       }
@@ -402,10 +442,10 @@ function openTradeTo(uid,name,prefillWant){
   document.getElementById('tSub').textContent=`Tausch mit ${name}`;
   // Populate offer dropdown with cards I have duplicates of
   const oSel=document.getElementById('tpOffer');oSel.innerHTML='';
-  for(let i=0;i<N;i++){if(cards[i]>1){const o=document.createElement('option');o.value=i+1;o.textContent=`#${i+1} (${cards[i]-1}× doppelt)`;oSel.appendChild(o)}}
+  for(let i=0;i<N;i++){if(cards[i]>1){const cd=CARDS[i];const o=document.createElement('option');o.value=i+1;o.textContent=`${cd.emoji} #${i+1} ${cd.name} (${cards[i]-1}× doppelt)`;oSel.appendChild(o)}}
   // Populate want dropdown with cards I need
   const wSel=document.getElementById('tpWant');wSel.innerHTML='';
-  for(let i=0;i<N;i++){if(cards[i]===0){const o=document.createElement('option');o.value=i+1;o.textContent=`#${i+1} (fehlt)`;wSel.appendChild(o)}}
+  for(let i=0;i<N;i++){if(cards[i]===0){const cd=CARDS[i];const o=document.createElement('option');o.value=i+1;o.textContent=`${cd.emoji} #${i+1} ${cd.name} (fehlt)`;wSel.appendChild(o)}}
   if(prefillWant)wSel.value=prefillWant;
   document.getElementById('tpOfferN').value=1;document.getElementById('tpWantN').value=1;
   document.getElementById('tpErr').textContent='';
@@ -415,8 +455,9 @@ function openTradeTo(uid,name,prefillWant){
 
 function updTP(){
   const oc=document.getElementById('tpOffer').value,wc=document.getElementById('tpWant').value;
+  const cdO=CARDS[oc-1]||{emoji:'?',name:'?'},cdW=CARDS[wc-1]||{emoji:'?',name:'?'};
   const on=document.getElementById('tpOfferN').value,wn=document.getElementById('tpWantN').value;
-  document.getElementById('tpPrev').innerHTML=`Du gibst <span class="give">#${oc} × ${on}</span><br>⟷<br>Du willst <span class="want">#${wc} × ${wn}</span>`;
+  document.getElementById('tpPrev').innerHTML=`Du gibst <span class="give">${cdO.emoji} ${cdO.name} × ${on}</span><br>⟷<br>Du willst <span class="want">${cdW.emoji} ${cdW.name} × ${wn}</span>`;
 }
 
 async function sendTrade(){
@@ -431,7 +472,7 @@ async function sendTrade(){
 function clTM(){document.getElementById('tMod').classList.remove('show');tradeTarget=null}
 
 // === CARD MODAL ===
-function openM(i){ac=i;document.getElementById('mN').textContent='#'+(i+1);document.getElementById('mC').textContent=cards[i];document.getElementById('cMod').classList.add('show')}
+function openM(i){ac=i;const cd=CARDS[i];document.getElementById('mN').textContent=`#${i+1} ${cd.name}`;document.getElementById('mS').textContent=`${cd.desc} · Max: 210 · Toxic Booster Genesis`;document.getElementById('mC').textContent=cards[i];document.getElementById('cMod').classList.add('show')}
 function aj(d){if(ac===null)return;cards[ac]=Math.max(0,Math.min(MX,cards[ac]+d));document.getElementById('mC').textContent=cards[ac];saveC();render()}
 function sC(v){if(ac===null)return;cards[ac]=Math.max(0,Math.min(MX,v));document.getElementById('mC').textContent=cards[ac];saveC();render()}
 function clM(){document.getElementById('cMod').classList.remove('show');ac=null}
