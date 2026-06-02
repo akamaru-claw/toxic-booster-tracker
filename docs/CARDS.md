@@ -16,26 +16,24 @@ Die "Toxic Booster – Genesis Edition" wurde erstmals auf der Bitcoin Zitadelle
 
 | Nr. | Name | Motiv | Seltenheit |
 |-----|------|-------|------------|
-| 1   | Satoshi | Bitcoin-Schöpfer | 1/210 |
-| 2   | HODL | Halten | 1/210 |
-| 3   | Pleb | Normie | 1/210 |
-| 4   | DIP | Crash | 1/210 |
-| 5   | Bear | Bärenmarkt | 1/210 |
-| 6   | Bull | Bullenmarkt | 1/210 |
-| 7   | Bag | Bagholder | 1/210 |
-| 8   | Rekt | Liquidiert | 1/210 |
-| 9   | Sats | Satoshis | 1/210 |
-| 10  | Node | Full Node | 1/210 |
-| 11  | Fork | Hard Fork | 1/210 |
-| 12  | Hash | Hashrate | 1/210 |
-| 13  | Block | Blockchain | 1/210 |
-| 14  | Fiat | Papierdollar | 1/210 |
-| 15  | Seed | Seed Phrase | 1/210 |
-| 16  | Pump | Pumpe | 1/210 |
-| 17  | Dump | Dump | 1/210 |
-| 18  | Whale | Wal | 1/210 |
-| 19  | FOMO | Angst zu verpassen | 1/210 |
-| 20  | NGU | Number Go Up | 1/210 |
-| 21  | Toxic | Toxic Booster | 1/210 |
-
-> ⚠️ Platzhalter-Namen — werden durch die echten Kartennamen ersetzt, sobald Kiba sie als Text liefert.
+| 1   | Jack Dorsey | Twitter-Gründer & Bitcoin-Maxi | 1/210 |
+| 2   | Marc Friedrich | Bestsellerautor & Krisexperte | 1/210 |
+| 3   | Hairtoshi | Satoshishaarigster Verwandter | 1/210 |
+| 4   | Antonopoulos | Andreas — Bitcoin-Educator | 1/210 |
+| 5   | Adam Back | Hashcash-Erfinder & Blockstream-CEO | 1/210 |
+| 6   | Nick Szabo | Bit Gold & Smart Contracts Pionier | 1/210 |
+| 7   | Sunny Decree | Schweizer Bitcoin-YouTuber | 1/210 |
+| 8   | Kanuto | Bitcoin-Gemeinschaftslegende | 1/210 |
+| 9   | Sirius | Früher Bitcoin-Entwickler | 1/210 |
+| 10  | Hal Finney | Erster Bitcoin-Transaktionsempfänger | 1/210 |
+| 11  | Alex Von Frankenberg | Bitcoin-Zitadellen-Vordenker | 1/210 |
+| 12  | Pieter Wuille | Bitcoin Core Developer | 1/210 |
+| 13  | Loddi | Bitcoin-Podcaster & Community | 1/210 |
+| 14  | Matt Corallo | Bitcoin Core Developer | 1/210 |
+| 15  | Jack Mallers | Strike-CEO & Lightning-Pionier | 1/210 |
+| 16  | Peter Todd | Bitcoin Core Contributor | 1/210 |
+| 17  | Jameson Lopp | Cypherpunk & Bitcoin-Educator | 1/210 |
+| 18  | Rahim Taghizadegan | Österreichische Schule & Bitcoin | 1/210 |
+| 19  | Nicolas Dorier | BTCPay Server Schöpfer | 1/210 |
+| 20  | Beer of Satoshi | Das legendäre Satoshi-Bier | 1/210 |
+| 21  | Fab or Chris | Toxic Booster Kollektiv | 1/210 |

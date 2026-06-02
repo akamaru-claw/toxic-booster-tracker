@@ -196,7 +196,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 </div>
 
 <!-- Card Edit Modal -->
-<div class="mo" id="cMod"><div class="md"><h2><span class="t" id="mN">#1 Satoshi</span></h2><div class="md-sub" id="mS">Bitcoin-Schöpfer · Max: 210 · Toxic Booster Genesis</div><div class="md-big" id="mC">0</div><div class="mr"><button class="mb" onclick="aj(-10)">−10</button><button class="mb" onclick="aj(-1)">−1</button><button class="mb" onclick="aj(1)">+1</button><button class="mb" onclick="aj(10)">+10</button></div><div class="mp2"><button onclick="sC(0)">0</button><button onclick="sC(1)">1</button><button onclick="sC(5)">5</button><button onclick="sC(210)">MAX</button></div><button class="mc2" onclick="clM()">Schließen</button></div></div>
+<div class="mo" id="cMod"><div class="md"><h2><span class="t" id="mN">#1 Jack Dorsey</span></h2><div class="md-sub" id="mS">Twitter-Gründer & Bitcoin-Maxi · Max: 210 · Toxic Booster Genesis</div><div class="md-big" id="mC">0</div><div class="mr"><button class="mb" onclick="aj(-10)">−10</button><button class="mb" onclick="aj(-1)">−1</button><button class="mb" onclick="aj(1)">+1</button><button class="mb" onclick="aj(10)">+10</button></div><div class="mp2"><button onclick="sC(0)">0</button><button onclick="sC(1)">1</button><button onclick="sC(5)">5</button><button onclick="sC(210)">MAX</button></div><button class="mc2" onclick="clM()">Schließen</button></div></div>
 
 <!-- Trade Propose Modal -->
 <div class="mo" id="tMod"><div class="md"><h2>🧪 <span class="t">Tausch</span> vorschlagen</h2><div class="md-sub" id="tSub"></div><div class="tp-fields"><div class="tp-row"><label>Ich biete</label><select id="tpOffer" onchange="updTP()"></select></div><div class="tp-row"><label style="width:40px">×</label><input type="number" id="tpOfferN" value="1" min="1" max="210" onchange="updTP()"></div><div class="tp-row"><label>Ich will</label><select id="tpWant" onchange="updTP()"></select></div><div class="tp-row"><label style="width:40px">×</label><input type="number" id="tpWantN" value="1" min="1" max="210" onchange="updTP()"></div></div><div class="tp-preview" id="tpPrev"></div><div class="ae" id="tpErr"></div><div class="mr"><button class="btn bp" style="flex:1" onclick="sendTrade()">Vorschlagen</button></div><button class="mc2" onclick="clTM()">Abbrechen</button></div></div>
@@ -204,27 +204,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 <script>
 const Au='auth_api.php',Ca='cards_api.php',Tr='trade_api.php',N=21,MX=210;
 const CARDS=[
-{n:1,name:'Satoshi',desc:'Bitcoin-Schöpfer',emoji:'₿'},
-{n:2,name:'HODL',desc:'Halten',emoji:'🤲'},
-{n:3,name:'Pleb',desc:'Normie',emoji:'🧑'},
-{n:4,name:'DIP',desc:'Crash',emoji:'📉'},
-{n:5,name:'Bear',desc:'Bärenmarkt',emoji:'🐻'},
-{n:6,name:'Bull',desc:'Bullenmarkt',emoji:'🐂'},
-{n:7,name:'Bag',desc:'Bagholder',emoji:'👜'},
-{n:8,name:'Rekt',desc:'Liquidiert',emoji:'💀'},
-{n:9,name:'Sats',desc:'Satoshis',emoji:'⚡'},
-{n:10,name:'Node',desc:'Full Node',emoji:'🖥️'},
-{n:11,name:'Fork',desc:'Hard Fork',emoji:'🔀'},
-{n:12,name:'Hash',desc:'Hashrate',emoji:'⛏️'},
-{n:13,name:'Block',desc:'Blockchain',emoji:'🧱'},
-{n:14,name:'Fiat',desc:'Papierdollar',emoji:'💵'},
-{n:15,name:'Seed',desc:'Seed Phrase',emoji:'🌱'},
-{n:16,name:'Pump',desc:'Pumpe',emoji:'🚀'},
-{n:17,name:'Dump',desc:'Dump',emoji:'⬇️'},
-{n:18,name:'Whale',desc:'Wal',emoji:'🐋'},
-{n:19,name:'FOMO',desc:'Angst zu verpassen',emoji:'😱'},
-{n:20,name:'NGU',desc:'Number Go Up',emoji:'📈'},
-{n:21,name:'Toxic',desc:'Toxic Booster',emoji:'🧪'}
+{n:1,name:'Jack Dorsey',desc:'Twitter-Gründer & Bitcoin-Maxi',emoji:'🐦'},
+{n:2,name:'Marc Friedrich',desc:'Bestsellerautor & Krisexperte',emoji:'📚'},
+{n:3,name:'Hairtoshi',desc:'Satoshishaarigster Verwandter',emoji:'💇'},
+{n:4,name:'Antonopoulos',desc:'Andreas — Bitcoin-Educator',emoji:'🎓'},
+{n:5,name:'Adam Back',desc:'Hashcash-Erfinder & Blockstream-CEO',emoji:'⛏️'},
+{n:6,name:'Nick Szabo',desc:'Bit Gold & Smart Contracts Pionier',emoji:'📜'},
+{n:7,name:'Sunny Decree',desc:'Schweizer Bitcoin-YouTuber',emoji:'🎬'},
+{n:8,name:'Kanuto',desc:'Bitcoin-Gemeinschaftslegende',emoji:'🎯'},
+{n:9,name:'Sirius',desc:'Früher Bitcoin-Entwickler',emoji:'⭐'},
+{n:10,name:'Hal Finney',desc:'Erster Bitcoin-Transaktionsempfänger',emoji:'💻'},
+{n:11,name:'Alex Von Frankenberg',desc:'Bitcoin-Zitadellen-Vordenker',emoji:'🏰'},
+{n:12,name:'Pieter Wuille',desc:'Bitcoin Core Developer',emoji:'🔧'},
+{n:13,name:'Loddi',desc:'Bitcoin-Podcaster & Community',emoji:'🎙️'},
+{n:14,name:'Matt Corallo',desc:'Bitcoin Core Developer',emoji:'⚙️'},
+{n:15,name:'Jack Mallers',desc:'Strike-CEO & Lightning-Pionier',emoji:'⚡'},
+{n:16,name:'Peter Todd',desc:'Bitcoin Core Contributor',emoji:'🔍'},
+{n:17,name:'Jameson Lopp',desc:'Cypherpunk & Bitcoin-Educator',emoji:'🔐'},
+{n:18,name:'Rahim Taghizadegan',desc:'Österreichische Schule & Bitcoin',emoji:'🏦'},
+{n:19,name:'Nicolas Dorier',desc:'BTCPay Server Schöpfer',emoji:'💳'},
+{n:20,name:'Beer of Satoshi',desc:'Das legendäre Satoshi-Bier',emoji:'🍺'},
+{n:21,name:'Fab or Chris',desc:'Toxic Booster Kollektiv',emoji:'🤝'}
 ];
 let tk=localStorage.getItem('tb_tk')||'',un=localStorage.getItem('tb_un')||'';
 let cards=Array(N).fill(0),ac=null,sv=null,tradeTarget=null,tradeTargetName='';
