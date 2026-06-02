@@ -474,7 +474,7 @@ function clTM(){document.getElementById('tMod').classList.remove('show');tradeTa
 // === CARD MODAL ===
 function openM(i){ac=i;const cd=CARDS[i];document.getElementById('mN').textContent=`#${i+1} ${cd.name}`;document.getElementById('mS').textContent=`${cd.desc} · Max: 210 · Toxic Booster Genesis`;document.getElementById('mC').textContent=cards[i];document.getElementById('cMod').classList.add('show')}
 function aj(d){if(ac===null)return;cards[ac]=Math.max(0,Math.min(MX,cards[ac]+d));document.getElementById('mC').textContent=cards[ac];saveC();render()}
-function sC(v){if(ac===null)return;cards[ac]=Math.max(0,Math.min(MX,v));document.getElementById('mC').textContent=cards[ac];saveC();render()}
+function sC(v){if(ac===null)return;cards[ac]=Math.max(0,Math.min(MX,v));document.getElementById('mC').textContent=cards[ac];saveC();render();clM()}
 function clM(){document.getElementById('cMod').classList.remove('show');ac=null}
 function resAll(){if(!confirm('Alle Karten auf 0 setzen?'))return;cards.fill(0);saveC();render()}
 
